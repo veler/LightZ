@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightZApp.Windows", "LightZ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightZApp.WindowsPhone", "LightZApp\LightZApp.WindowsPhone\LightZApp.WindowsPhone.csproj", "{DBF71EE5-6F06-4883-B7BB-DEEEB8CAC0A4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{418C150B-2363-4ADE-84CC-20A8E6C45AC4}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		LightZApp\LightZApp.Shared\LightZApp.Shared.projitems*{1cae605f-2830-4b8d-aece-3e35886ed7d4}*SharedItemsImports = 4
