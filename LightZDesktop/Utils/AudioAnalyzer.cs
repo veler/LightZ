@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Threading;
 
+    using CoreAudioApi;
+
     using LightZPortableLibrary.Model;
 
     using Un4seen.Bass;
@@ -30,6 +32,7 @@
         private bool _listening;
         private WASAPIPROC _wasapiProcessCallback;
         private AudioDevice _currentAudioDevice;
+        private MMDevice _mmAudioDevice;
 
         #endregion
 
@@ -117,6 +120,10 @@
 
             Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATETHREADS, false);
             Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+
+            var devEnum = new MMDeviceEnumerator();
+            this._mmAudioDevice = devEnum.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia);
+            this._mmAudioDevice.AudioEndpointVolume.OnVolumeNotification += this.AudioEndpointVolume_OnVolumeNotification;
         }
 
         #endregion
@@ -134,6 +141,7 @@
             if (!this.Listening)
                 return null;
 
+            var volume = -(this._mmAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar - 1.1f);
             var dataCount = BassWasapi.BASS_WASAPI_GetData(this._fftDataBuffer, (int)BASSData.BASS_DATA_FFT2048);
             if (dataCount < -1)
                 return null;
@@ -154,7 +162,8 @@
                     b1 = b0 + 1;
                 for (; b0 < b1; b0++)
                     if (peak < this._fftDataBuffer[1 + b0])
-                        peak = this._fftDataBuffer[1 + b0];
+                        peak = this._fftDataBuffer[1 + b0] / volume;
+
                 j = (int)(Math.Sqrt(peak) * 3 * 255 - 4);
                 if (j > 255)
                     j = 255;
@@ -194,6 +203,10 @@
         private int WasapiProcessCallBack(IntPtr buffer, int length, IntPtr user)
         {
             return length;
+        }
+
+        private void AudioEndpointVolume_OnVolumeNotification(AudioVolumeNotificationData data)
+        {
         }
 
         public void Dispose()

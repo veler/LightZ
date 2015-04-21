@@ -8,7 +8,6 @@
     using LightZDesktop.Utils;
     using LightZDesktop.ViewModel;
 
-
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
