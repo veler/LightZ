@@ -18,7 +18,7 @@
         private const int MaxLines = 16;
 
         /// <summary>
-        /// Les échantillons de son correspondant aux basses sont les 4 premiers.
+        /// The samples corresponding to the bass are the first 4.
         /// </summary>
         private static readonly int[] BassLines = { 0, 4 };
 
@@ -39,7 +39,7 @@
         #region Properties
 
         /// <summary>
-        /// Obtient la liste des périphériques audio
+        /// Get the list of audio devices
         /// </summary>
         public List<AudioDevice> AudioDevices
         {
@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        /// Obitent ou définit le périphérique audio actif
+        /// Gets or sets the current audio device to use
         /// </summary>
         public AudioDevice CurrentAudioDevice
         {
@@ -77,7 +77,7 @@
         }
 
         /// <summary>
-        /// Obtient ou définit si le périphérique audio est actuellement sur écoute
+        /// Gets or sets if the current audio device is listened
         /// </summary>
         public bool Listening
         {
@@ -111,7 +111,7 @@
         #region Constructors
 
         /// <summary>
-        /// Initialise une nouvelle instance de la classe AudioAnalyzer
+        /// Initializes an instance of the class <see cref="AudioAnalyzer"/>
         /// </summary>
         public AudioAnalyzer()
         {
@@ -131,9 +131,9 @@
         #region Methods
 
         /// <summary>
-        /// Récupère les données audios du périphérique, fait une moyenne des basses, arrondi selon les niveaux Gauche et Droite, puis retourne le résultat.
+        /// Retrieves audio data from the device, makes an average of the bass, rounded to the Left and Right levels and returns the result.
         /// </summary>
-        /// <returns>Dictionnaire de données contenant les données gauche et droite arrondies</returns>
+        /// <returns>Data dictionary containing the rounded left and right data</returns>
         public Dictionary<string, byte> AnalyzeBassAverage()
         {
             var result = new Dictionary<string, byte>();
@@ -141,7 +141,7 @@
             if (!this.Listening)
                 return null;
 
-            var volume = -(this._mmAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar - 1.1f);
+            var volume = -(this._mmAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar - 1.1f); // The higher the volume of the PC is, the higher the values returned by BASS are low. A calculation based on the volume of the PC can counter this.
             var dataCount = BassWasapi.BASS_WASAPI_GetData(this._fftDataBuffer, (int)BASSData.BASS_DATA_FFT2048);
             if (dataCount < -1)
                 return null;
@@ -187,7 +187,7 @@
                 this._lastOutputLevelCounter++;
             this._lastOutputLevel = level;
 
-            if (this._lastOutputLevelCounter > 3)
+            if (this._lastOutputLevelCounter > 3) // regularly, the API can no longer recover the spectrum and should be reset ... as the official documentation says
             {
                 this._lastOutputLevelCounter = 0;
                 BassWasapi.BASS_WASAPI_Free();

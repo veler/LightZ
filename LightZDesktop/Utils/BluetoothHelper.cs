@@ -17,7 +17,7 @@
         #region Properties
 
         /// <summary>
-        /// Pour l'application Desktop en particulier, retourne le nom du port auquel on est connecté pour intéragir par Bluetooth
+        /// For the Desktop application in particular : returns the name of the port it is connected by Bluetooth to interact
         /// </summary>
         public override string PortName
         {
@@ -28,7 +28,7 @@
         }
 
         /// <summary>
-        /// Retourne True si on est actuellement connecté à l'appareil
+        /// Returns True if it is currently connected to the device
         /// </summary>
         public override bool Connected
         {
@@ -43,7 +43,7 @@
         #region Events
 
         /// <summary>
-        /// Evènement levé lorsqu'une donnée provenant de l'appareil en Bluetooth est reçu.
+        /// Event raised when data from the Bluetooth device is received.
         /// </summary>
         public override event BluetoothDataReceivedEventArgsEventHandler DataReceived;
 
@@ -52,7 +52,7 @@
         #region Constructors
 
         /// <summary>
-        /// Initialise une instance de la classe BluetoothHelper
+        /// Initializes an instance of the class <see cref="BluetoothHelper"/>
         /// </summary>
         public BluetoothHelper()
         {
@@ -64,10 +64,10 @@
         #region Handled Methods
 
         /// <summary>
-        /// Méthode appelée lorsque le port série reçoit une donnée
+        /// Method called when the serial port receives data
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">the serial port</param>
+        /// <param name="e">the data</param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             try
@@ -95,9 +95,9 @@
         #region Methods
 
         /// <summary>
-        /// Se connecte à l'appareil
+        /// Connect to the device
         /// </summary>
-        /// <param name="portName">Nom du port</param>
+        /// <param name="portName">port name</param>
         public override void Connect(string portName)
         {
             Task.Run(
@@ -116,7 +116,7 @@
         }
 
         /// <summary>
-        /// Se déconnecter de l'appareil
+        /// Disconnect from the device
         /// </summary>
         public override void Disconnect()
         {
@@ -125,9 +125,9 @@
         }
 
         /// <summary>
-        /// Envoyer une donnée par Bluetooth à l'appareil
+        /// Send a data to the device by Bluetooth
         /// </summary>
-        /// <param name="data">La donnée à envoyer</param>
+        /// <param name="data">The data to send</param>
         public override void Send(byte[] data)
         {
             if (!this.Connected)

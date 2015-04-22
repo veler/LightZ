@@ -51,6 +51,9 @@
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes an instance of the class <see cref="DirectxScreenCapturer"/>
+        /// </summary>
         public DirectxScreenCapturer()
         {
             this.CalculatePositions();
@@ -65,6 +68,9 @@
 
         #region Methods
 
+        /// <summary>
+        /// Calculate the positions to analyze on the screen
+        /// </summary>
         private void CalculatePositions()
         {
             long x;
@@ -146,6 +152,13 @@
             }
         }
 
+        /// <summary>
+        /// Generates a value corresponding to a LED by analyzing the screen
+        /// </summary>
+        /// <param name="ledIndex">index of the LED</param>
+        /// <param name="data">The entire byte array corresponding to each pixel of the screen</param>
+        /// <param name="positions">The position on the screen to analyze</param>
+        /// <returns>a LED</returns>
         private Led GenerateLed(Target ledIndex, DataStream data, List<long> positions)
         {
             if (data == null)
@@ -190,6 +203,10 @@
             return result;
         }
 
+        /// <summary>
+        /// Generate all LEDs to display
+        /// </summary>
+        /// <returns>all the LEDs</returns>
         public List<List<Led>> GetLedsFromScreenCapture()
         {
             var result = new List<List<Led>>();
