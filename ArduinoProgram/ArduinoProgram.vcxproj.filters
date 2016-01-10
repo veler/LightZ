@@ -18,10 +18,10 @@
     <None Include="ArduinoProgram.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Visual Micro\.ArduinoProgram.vsarduino.h">
+    <ClInclude Include="SoundLedColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SoundLedColor.h">
+    <ClInclude Include="__vm\.ArduinoProgram.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

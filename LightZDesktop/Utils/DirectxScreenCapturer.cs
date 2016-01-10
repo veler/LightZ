@@ -15,7 +15,7 @@
     {
         #region Fields
 
-        private readonly Device _device;
+        private Device _device;
         private readonly List<long> _led0Pos = new List<long>();
         private readonly List<long> _led1Pos = new List<long>();
         private readonly List<long> _led2Pos = new List<long>();
@@ -57,16 +57,25 @@
         public DirectxScreenCapturer()
         {
             this.CalculatePositions();
+            this.InitializeDirectX();
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void InitializeDirectX()
+        {
+            if (this._device != null)
+            {
+                this._device.Dispose();
+            }
 
             var parameters = new PresentParameters();
             parameters.Windowed = true;
             parameters.SwapEffect = SwapEffect.Discard;
             this._device = new Device(new Direct3D(), 0, DeviceType.Hardware, IntPtr.Zero, CreateFlags.SoftwareVertexProcessing, parameters);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Calculate the positions to analyze on the screen
@@ -251,7 +260,14 @@
             }
             finally
             {
-                surface.UnlockRectangle();
+                try
+                {
+                    surface.UnlockRectangle();
+                }
+                catch
+                {
+                    this.InitializeDirectX();
+                }
                 surface.Dispose();
             }
 

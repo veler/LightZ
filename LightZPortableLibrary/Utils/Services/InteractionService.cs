@@ -1,4 +1,6 @@
-﻿namespace LightZPortableLibrary.Utils.Services
+﻿using System.Threading;
+
+namespace LightZPortableLibrary.Utils.Services
 {
     using System;
     using System.Threading.Tasks;
@@ -62,18 +64,39 @@
 
         #region Handled Methods
 
+        public delegate void AsyncMethodCaller(InteractionService sender);
         private void Tick(object sender, EventArgs e)
         {
             this._timer.Dispose();
-            Task.Run(
-                () =>
-                {
-                    while (!this._disposed)
-                    {
-                        this.Loop();
-                    }
-                });
+
+            // Create the delegate.
+            var caller = new AsyncMethodCaller(AsyncKeepAlive);
+            // Initiate the asychronous call.
+            var result = caller.BeginInvoke(this, null, null);
+
+            //Task.Run(
+            //        () =>
+            //        {
+            //            while (!this._disposed)
+            //            {
+            //                this.Loop();
+            //            }
+            //        });
         }
+
+        private static void AsyncKeepAlive(InteractionService sender)
+        {
+            var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, Guid.NewGuid().ToString());
+
+            do
+            {
+                //eventWaitHandle.WaitOne(TimeSpan.FromMilliseconds(1));
+                sender.Loop();
+            } while (!sender._disposed);
+
+        }
+
+
 
         protected abstract void Loop();
 

@@ -107,10 +107,12 @@
                 this._audioAnalyze.Listening = this.CurrentArduinoMode == Mode.Sound;
             }
 
+            var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, Guid.NewGuid().ToString());
+
             switch (this.CurrentArduinoMode)
             {
                 case Mode.Off:
-                    Thread.Sleep(500);
+                    eventWaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
                     break;
 
                 case Mode.Manual:
@@ -124,12 +126,12 @@
                     foreach (var ledsPart in leds) // small packets are sent to avoid saturating the Bluetooth antenna
                     {
                         this.Bluetooth.Send(QueryManager.GenerateLedQuery(ledsPart));
-                        Thread.Sleep(2);
+                        eventWaitHandle.WaitOne(TimeSpan.FromMilliseconds(10));
                     }
                     break;
 
                 case Mode.Sound:
-                    Thread.Sleep(20); // to be "about" a frequency of 40Hz
+                    eventWaitHandle.WaitOne(TimeSpan.FromMilliseconds(20)); // to be "about" a frequency of 40Hz
                     if (this._audioAnalyze.Listening)
                     {
                         var levels = this._audioAnalyze.AnalyzeBassAverage();
