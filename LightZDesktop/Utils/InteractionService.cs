@@ -94,8 +94,13 @@
         /// </summary>
         protected override void Loop()
         {
+            var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, Guid.NewGuid().ToString());
+
             if (this.Bluetooth == null || !this.Bluetooth.Connected)
+            {
+                eventWaitHandle.WaitOne();
                 return;
+            }
 
             if (this.CurrentArduinoMode == Mode.Unknow || this.CurrentArduinoMode != Settings.Default.Mode)
             {
@@ -107,12 +112,10 @@
                 this._audioAnalyze.Listening = this.CurrentArduinoMode == Mode.Sound;
             }
 
-            var eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, Guid.NewGuid().ToString());
-
             switch (this.CurrentArduinoMode)
             {
                 case Mode.Off:
-                    eventWaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
+                    eventWaitHandle.WaitOne();
                     break;
 
                 case Mode.Manual:
