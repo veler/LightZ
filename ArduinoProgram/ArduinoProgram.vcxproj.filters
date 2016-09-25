@@ -24,9 +24,15 @@
     <ClInclude Include="__vm\.ArduinoProgram.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SoundLedDeclinaison.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundLedColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundLedDeclinaison.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

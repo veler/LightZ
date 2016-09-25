@@ -1,5 +1,6 @@
 #include "FastLED.h" // Available here : https://github.com/FastLED/FastLED
 #include "SoundLedColor.h"
+#include "SoundLedDeclinaison.h"
 
 #define NUM_LEDS 20
 #define DATA_PIN 3

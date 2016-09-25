@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "FastLED.h"
+#include "SoundLedDeclinaison.h"
 
 class SoundLedColor
 {
@@ -13,4 +14,5 @@ public:
     short ledIndex;
     byte rank;
     CRGB color;
+	SoundLedDeclinaison declinaisons[9];
 };
