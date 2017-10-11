@@ -1,0 +1,16 @@
+﻿<Application x:Class="LightZ.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LightZ"
+             StartupUri="Views/MainWindow.xaml"
+             Startup="Application_Startup"
+             Exit="Application_Exit">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/DefaultColorSchema.xaml"/>
+                <ResourceDictionary Source="Themes/Custom.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

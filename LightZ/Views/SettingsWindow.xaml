@@ -1,0 +1,129 @@
+﻿<controls:BlurredWindow
+        x:Class="LightZ.Views.SettingsWindow"
+        xmlns:controls="clr-namespace:LightZ.ComponentModel.UI.Controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:LightZ.ViewModels"
+        xmlns:converters="clr-namespace:LightZ.ComponentModel.UI.Converters"
+        xmlns:enums="clr-namespace:LightZ.ComponentModel.Enums"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="LightZ - Settings"
+        Height="550"
+        Width="580"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        IsBlurred="False"
+        UseAccentColor="No"
+        AutomationProperties.HelpText="Settings of LightZ">
+    <controls:BlurredWindow.Resources>
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="LedStripModes">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:LedStripMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="LedStripMonitorPositions">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:LedStripMonitorPosition" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </controls:BlurredWindow.Resources>
+    <controls:BlurredWindow.DataContext>
+        <viewModels:SettingsWindowViewModel/>
+    </controls:BlurredWindow.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1">
+            <StackPanel Margin="24,0,0,0">
+                <CheckBox Content="Start automatically when I sign in to Windows" IsChecked="{Binding AutoStartup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="LightZ device" VerticalAlignment="Center"/>
+                            <ComboBox Margin="0,5,0,0" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding SerialDevices, IsAsync=True}" SelectedValue="{Binding LightZDevice, Mode=TwoWay}" DisplayMemberPath="DeviceName" SelectedValuePath="DeviceName" AutomationProperties.Name="LightZ device" AutomationProperties.HelpText="Select the Bluetooth or USB device that corresponds to your led strip."/>
+                            <TextBlock Text="{Binding LightZDeviceStatus}" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="Mode" VerticalAlignment="Center"/>
+                            <ComboBox Margin="0,5,0,0" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Source={StaticResource LedStripModes}}" SelectedValue="{Binding Mode, Mode=TwoWay}" AutomationProperties.Name="Led strip mode" AutomationProperties.HelpText="Select the led strip mode.">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="Manual color" VerticalAlignment="Center"/>
+                            <controls:ColorPicker Margin="0,5,0,0" SelectedColor="{Binding ManualColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedBrightness="{Binding ManualBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Margin="24,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Sound card" VerticalAlignment="Center"/>
+                            <ComboBox Margin="0,5,0,0" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding AudioDevices, IsAsync=True}" SelectedValue="{Binding AudioDevice, Mode=TwoWay}" DisplayMemberPath="DeviceName" SelectedValuePath="DeviceName" AutomationProperties.Name="Sound card" AutomationProperties.HelpText="Select the sound card that corresponds to where your music/sound actually output."/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="Monitor" VerticalAlignment="Center"/>
+                            <ComboBox Margin="0,5,0,0" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Monitors, IsAsync=True}" SelectedValue="{Binding Monitor, Mode=TwoWay}" DisplayMemberPath="DeviceName" SelectedValuePath="DeviceId" AutomationProperties.Name="Monitor" AutomationProperties.HelpText="Select the monitor that must be used to do the monitor's colors render."/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="Led strip position behind the monitor" VerticalAlignment="Center"/>
+                            <ComboBox Margin="0,5,0,0" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Source={StaticResource LedStripMonitorPositions}}" SelectedValue="{Binding LedStripMonitorPosition, Mode=TwoWay}" AutomationProperties.Name="Led strip mode" AutomationProperties.HelpText="Select the led strip mode.">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock x:Name="HorizontalLedsTextBlock" Text="Total number of horizontal LEDs" VerticalAlignment="Center"/>
+                            <controls:TouchTextBox Margin="0,5,0,0" PlaceHolder="2-100" Width="250" CanClear="False" Text="{Binding HorizontalLeds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.LabeledBy="{Binding ElementName=HorizontalLedsTextBlock, Mode=OneWay}" HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock x:Name="VerticalLedsTextBlock" Text="Total number of vertical LEDs" VerticalAlignment="Center"/>
+                            <controls:TouchTextBox Margin="0,5,0,0" PlaceHolder="2-100" Width="250" CanClear="False" Text="{Binding VerticalLeds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.LabeledBy="{Binding ElementName=VerticalLedsTextBlock, Mode=OneWay}" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="0" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="24,0,0,0" Text="LightZ" Foreground="White" VerticalAlignment="Center"/>
+                <TextBlock Margin="5,0,0,0" Text="v2.0.0.0" VerticalAlignment="Center" FontSize="12"/>
+            </StackPanel>
+            <Border Background="Transparent" MouseLeftButtonDown="DragZoneGrid_OnMouseLeftButtonDown"/>
+            <Button Style="{StaticResource IconButtonStyle}"
+                    ToolTip="Close"
+                    AutomationProperties.AcceleratorKey="Esc" 
+                    AutomationProperties.HelpText="Close the dialog}" 
+                    Content="&#xE10A;"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    IsCancel="True"
+                    TabIndex="1"
+                    Command="{Binding CloseButtonCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+        </Grid>
+    </Grid>
+</controls:BlurredWindow>

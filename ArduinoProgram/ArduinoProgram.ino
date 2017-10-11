@@ -20,27 +20,7 @@ enum Target
     MODE = 0,
     BRIGHTNESS = 1,
     ALLLEDS = 2,
-    LED1 = 3,
-    LED2 = 4,
-    LED3 = 5,
-    LED4 = 6,
-    LED5 = 7,
-    LED6 = 8,
-    LED7 = 9,
-    LED8 = 10,
-    LED9 = 11,
-    LED10 = 12,
-    LED11 = 13,
-    LED12 = 14,
-    LED13 = 15,
-    LED14 = 16,
-    LED15 = 17,
-    LED16 = 18,
-    LED17 = 19,
-    LED18 = 20,
-    LED19 = 21,
-    LED20 = 22,
-    AUDIO = 27
+    AUDIO = 3
 };
 
 enum Mode
@@ -103,7 +83,7 @@ void loop()
             Serial.flush();
         }
     }
-    
+
     turnOffIfPossible();
 }
 
@@ -141,9 +121,9 @@ void proceedReceivedData(const byte data[DATA_MAX_SIZE], const int &number_of_by
             break;
 
         default:
-            if (data[i] >= 3 && data[i] <= 22)
+            if (data[i] >= 4 && data[i] <= 23)
             {
-                showColor(data[i] - 3, CRGB(data[i + 1], data[i + 2], data[i + 3]), true);
+                showColor(data[i] - 4, CRGB(data[i + 1], data[i + 2], data[i + 3]), true);
                 i += LED_DATA_SIZE;
             }
             break;

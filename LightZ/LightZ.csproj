@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{371B6310-EB50-4C33-BC47-9E5C68982D55}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LightZ</RootNamespace>
+    <AssemblyName>LightZ</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\lightz.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bass.Net">
+      <HintPath>..\ThirdPartLibraries\Bass.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator, Version=1.4.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.4.0\lib\net45\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreAudioApi">
+      <HintPath>..\ThirdPartLibraries\CoreAudioApi.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
+      <HintPath>..\packages\SlimDX.4.0.13.44\lib\NET40\SlimDX.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ComponentModel\Core\AsyncBackgroundWorker.cs" />
+    <Compile Include="ComponentModel\Core\ShortcutHelper.cs" />
+    <Compile Include="ComponentModel\Enums\ExecutionState.cs" />
+    <Compile Include="ComponentModel\Enums\LedStripActionTarget.cs" />
+    <Compile Include="ComponentModel\Enums\LedStripMode.cs" />
+    <Compile Include="ComponentModel\Enums\LedStripMonitorPosition.cs" />
+    <Compile Include="ComponentModel\Enums\Stgm.cs" />
+    <Compile Include="ComponentModel\Events\AsyncBackgroundWorkerEndedEventArgs.cs" />
+    <Compile Include="ComponentModel\Interop\Classes\CShellLink.cs" />
+    <Compile Include="ComponentModel\Interop\Classes\PropVariant.cs" />
+    <Compile Include="ComponentModel\Interop\Interfaces\IPersistFile.cs" />
+    <Compile Include="ComponentModel\Interop\Interfaces\IPropertyStore.cs" />
+    <Compile Include="ComponentModel\Interop\Interfaces\IShellLinkW.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\PropertyKey.cs" />
+    <Compile Include="ComponentModel\Services\DirectXScreenService.cs" />
+    <Compile Include="ComponentModel\UI\Controls\ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ComponentModel\UI\Controls\TouchTextBox.cs" />
+    <Compile Include="ComponentModel\UI\Converters\BooleanToVerticalAlignmentConverter.cs" />
+    <Compile Include="ComponentModel\UI\Converters\EnumDescriptionConverter.cs" />
+    <Compile Include="Models\Color.cs" />
+    <Compile Include="Models\Led.cs" />
+    <Compile Include="ViewModels\SettingsWindowViewModel.cs" />
+    <Compile Include="Views\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ComponentModel\UI\Controls\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Custom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\DefaultColorSchema.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComponentModel\Consts.cs" />
+    <Compile Include="ComponentModel\Core\CoreHelper.cs" />
+    <Compile Include="ComponentModel\Core\Delayer.cs" />
+    <Compile Include="ComponentModel\Core\Delegates.cs" />
+    <Compile Include="ComponentModel\Core\IPausable.cs" />
+    <Compile Include="ComponentModel\Core\Requires.cs" />
+    <Compile Include="ComponentModel\Core\SystemInfoHelper.cs" />
+    <Compile Include="ComponentModel\Enums\AccentColorUse.cs" />
+    <Compile Include="ComponentModel\Enums\AccentState.cs" />
+    <Compile Include="ComponentModel\Enums\BalloonTipIcon.cs" />
+    <Compile Include="ComponentModel\Enums\HookType.cs" />
+    <Compile Include="ComponentModel\Enums\KeyState.cs" />
+    <Compile Include="ComponentModel\Enums\MouseAction.cs" />
+    <Compile Include="ComponentModel\Enums\MouseSignal.cs" />
+    <Compile Include="ComponentModel\Enums\MouseWheelAction.cs" />
+    <Compile Include="ComponentModel\Enums\WindowCompositionAttribute.cs" />
+    <Compile Include="ComponentModel\Events\SerialDataReceivedEventArgs.cs" />
+    <Compile Include="ComponentModel\Events\DelayerActionEventArgs.cs" />
+    <Compile Include="ComponentModel\Events\MouseHookEventArgs.cs" />
+    <Compile Include="ComponentModel\Exceptions\IsFalseRequiredException.cs" />
+    <Compile Include="ComponentModel\Exceptions\IsTrueRequiredException.cs" />
+    <Compile Include="ComponentModel\Exceptions\NotNullOrEmptyRequiredException.cs" />
+    <Compile Include="ComponentModel\Exceptions\NotNullOrWhiteSpaceRequiredException.cs" />
+    <Compile Include="ComponentModel\Exceptions\NotNullRequiredException.cs" />
+    <Compile Include="ComponentModel\Core\MouseHook.cs" />
+    <Compile Include="ComponentModel\Interop\AccentColorSet.cs" />
+    <Compile Include="ComponentModel\Interop\NativeMethods.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\AccentPolicy.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\MouseHookStruct.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\Point.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\Rect.cs" />
+    <Compile Include="ComponentModel\Interop\Structs\WindowCompositionAttributeData.cs" />
+    <Compile Include="ComponentModel\Services\AudioService.cs" />
+    <Compile Include="ComponentModel\Services\Base\IService.cs" />
+    <Compile Include="ComponentModel\Services\Base\ServiceLocator.cs" />
+    <Compile Include="ComponentModel\Services\SerialService.cs" />
+    <Compile Include="ComponentModel\Services\LedStripService.cs" />
+    <Compile Include="ComponentModel\Services\MouseHookService.cs" />
+    <Compile Include="ComponentModel\UI\Controls\BlurredWindow.cs" />
+    <Compile Include="ComponentModel\UI\Controls\NotifyIcon.cs" />
+    <Compile Include="ComponentModel\UI\Converters\ActiveColorSetToSolidColorBrushConverter.cs" />
+    <Compile Include="Models\AudioDevice.cs" />
+    <Compile Include="Models\SerialDevice.cs" />
+    <Compile Include="Models\ScreenInfo.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\lightz.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\ColorSwatchSquare.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\..\ThirdPartLibraries" "$(TargetDir)" /e /h /i /r /y /c</PostBuildEvent>
+  </PropertyGroup>
+</Project>
