@@ -12,7 +12,7 @@ Special thank to [Sébastien WARIN](http://sebastien.warin.fr/) who inspired me t
 
 [More info here](http://lightz.velersoftware.com)
 
-![clipboardzanager](http://medias.velersoftware.com/images/lightz/background.png)
+![clipboardzanager](http://medias.velersoftware.com/images/lightz/background.jpg)
 
 ![clipboardzanager](http://medias.velersoftware.com/images/lightz/1.png)
 
@@ -24,7 +24,7 @@ You will need the following tools :
 * Visual Studio 2017 with ``Windows development`` and ``C++ development``
 * [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 * [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
-* [FastLED](https://github.com/FastLED/FastLED). Close this repository to ``Documents\Arduino\libraries`` and, in Visual Studio, configure the Arduino extension to use this library.
+* [FastLED](https://github.com/FastLED/FastLED). Clone this repository to ``Documents\Arduino\libraries`` and, in Visual Studio, configure the Arduino extension to use this library.
 
 # Third part libraries
 
