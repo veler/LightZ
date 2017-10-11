@@ -3,10 +3,10 @@
 *LightZ* is a homemade connected LED strip based on Arduino. Inspired by [Philips Ambilight](http://www.philips.com/c-cs/tv/tv-ambilight.html), it can render the light from a computer's screen and sound. This project is a prototype and is not designed to target the general users, however, the source code are available here.
 
 The main features of LightZ are :
-* Connecting to the LED strip via USB or Bluetooth.
+* Connection to the LED strip via USB or Bluetooth.
 * Possibility to define a manual color.
 * Render the sound spectrum.
-* Render the monitor borders colors.
+* Render the monitor borders colors (dynamically depending of the number of LEDs and the LED strip position behind the monitor).
 
 Special thank to [Sébastien WARIN](http://sebastien.warin.fr/) who inspired me to make this project.
 
