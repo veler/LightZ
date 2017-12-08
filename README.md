@@ -8,7 +8,7 @@ The main features of LightZ are :
 * Render the sound spectrum.
 * Render the monitor borders colors (dynamically depending of the number of LEDs and the LED strip position behind the monitor).
 
-Special thank to [Sébastien WARIN](http://sebastien.warin.fr/) who inspired me to make this project.
+Special thank to [Sï¿½bastien WARIN](http://sebastien.warin.fr/) who inspired me to make this project.
 
 [More info here](http://lightz.velersoftware.com)
 
@@ -21,6 +21,7 @@ Special thank to [Sébastien WARIN](http://sebastien.warin.fr/) who inspired me t
 You will need the following tools :
 * Windows 7, 8, 8.1 or 10
 * .Net 4.6
+* [DirectX](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=35&tduid=(bbed62278c04555835508dc72e346de9)(152407)(1806294)(68756X1554900Xab61605235ce1de4c76219d6204b1d1a)())
 * Visual Studio 2017 with ``Windows development`` and ``C++ development``
 * [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 * [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
