@@ -21,7 +21,7 @@ Special thank to [S�bastien WARIN](http://sebastien.warin.fr/) who inspired me
 You will need the following tools :
 * Windows 7, 8, 8.1 or 10
 * .Net 4.6
-* [DirectX](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=35&tduid=(bbed62278c04555835508dc72e346de9)(152407)(1806294)(68756X1554900Xab61605235ce1de4c76219d6204b1d1a)())
+* DirectX 11
 * Visual Studio 2017 with ``Windows development`` and ``C++ development``
 * [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 * [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
@@ -31,6 +31,7 @@ You will need the following tools :
 
 * [Bass.Net](http://bass.radio42.com/)
 * [FastLED](https://github.com/FastLED/FastLED)
+* [SharpDX](http://sharpdx.org/)
 
 # License
 

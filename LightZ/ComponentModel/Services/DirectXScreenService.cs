@@ -3,8 +3,9 @@ using LightZ.ComponentModel.Enums;
 using LightZ.ComponentModel.Services.Base;
 using LightZ.Models;
 using LightZ.Properties;
-using SlimDX;
-using SlimDX.Direct3D9;
+using SharpDX;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,10 +20,14 @@ namespace LightZ.ComponentModel.Services
     {
         #region Fields
 
+        private SharpDX.Direct3D11.Device _direct3D11Device;
+        private Adapter1 _adapter;
+        private OutputDescription _outputDescription;
+        private Texture2DDescription _textureDescription;
+        private OutputDuplication _outputDuplication;
+        private Texture2D _desktopImageTexture = null;
+
         private List<List<long>> _ledsPositions;
-        private Direct3D _direct3D9;
-        private Device _direct3D9Device;
-        private AdapterInformation _adapter;
         private ScreenInfo _currentMonitor;
         private LedStripMonitorPosition _ledStripMonitorPosition;
         private int _horizontalLedCount;
@@ -137,15 +142,22 @@ namespace LightZ.ComponentModel.Services
         /// <inheritdoc/>
         public void Reset()
         {
-            if (_direct3D9 != null)
+            if (_adapter != null)
             {
-                _direct3D9.Dispose();
+                _adapter.Dispose();
             }
 
-            if (_direct3D9Device != null)
+            if (_outputDuplication != null)
             {
-                _direct3D9Device.Dispose();
+                _outputDuplication.Dispose();
             }
+
+            if (_direct3D11Device != null)
+            {
+                _direct3D11Device.Dispose();
+            }
+
+            _desktopImageTexture = null;
         }
 
         /// <summary>
@@ -161,31 +173,37 @@ namespace LightZ.ComponentModel.Services
                 return result;
             }
 
-            var surface = Surface.CreateOffscreenPlain(_direct3D9Device, CurrentMonitor.Bounds.Right, CurrentMonitor.Bounds.Bottom, Format.A8R8G8B8, Pool.Scratch);
-            _direct3D9Device.BeginScene();
             try
             {
                 Requires.IsTrue((HorizontalLedCount + VerticalLedCount) % 2 == 0);
                 Requires.IsTrue(HorizontalLedCount + VerticalLedCount < 255);
 
-                _direct3D9Device.GetFrontBufferData(0, surface); // throw an exception after a while (between 1 and 5min) without error code.
-
-                var dataRectangle = surface.LockRectangle(LockFlags.None);
-                var data = dataRectangle.Data;
-                var tempList = new List<Led>();
-
-                // making group of 5 leds to send to the Arduino.
-                for (var i = 0; i < _ledsPositions.Count; i++)
+                // Try to get the latest frame; this may timeout
+                bool retrievalTimedOut = RetrieveFrame();
+                if (!retrievalTimedOut)
                 {
-                    if (tempList.Count == 5)
-                    {
-                        result.Add(tempList);
-                        tempList = new List<Led>();
-                    }
+                    var width = _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left;
+                    var height = _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top;
 
-                    tempList.Add(GenerateLed((byte)(i + 4), data, _ledsPositions[i]));
+                    // Get the desktop capture texture
+                    var data = _direct3D11Device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, SharpDX.Direct3D11.MapFlags.None);
+                    _direct3D11Device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
+
+                    var tempList = new List<Led>();
+
+                    // making group of 5 leds to send to the Arduino.
+                    for (var i = 0; i < _ledsPositions.Count; i++)
+                    {
+                        if (tempList.Count == 5)
+                        {
+                            result.Add(tempList);
+                            tempList = new List<Led>();
+                        }
+
+                        tempList.Add(GenerateLed((byte)(i + 4), data, _ledsPositions[i]));
+                    }
+                    result.Add(tempList);
                 }
-                result.Add(tempList);
             }
             catch (Exception ex)
             {
@@ -193,43 +211,94 @@ namespace LightZ.ComponentModel.Services
             }
             finally
             {
-                try
-                {
-                    surface.UnlockRectangle();
-                }
-                catch
+                if (!ReleaseFrame())
                 {
                     Reset();
                     InitializeDirectX();
                 }
-                surface.Dispose();
-                _direct3D9Device.EndScene();
             }
 
             return result;
         }
 
         /// <summary>
+        /// Retrieves the next frame.
+        /// </summary>
+        /// <returns>True if the action timeout.</returns>
+        private bool RetrieveFrame()
+        {
+            if (_desktopImageTexture == null)
+            {
+                _desktopImageTexture = new Texture2D(_direct3D11Device, _textureDescription);
+            }
+
+            SharpDX.DXGI.Resource desktopResource = null;
+            var outputDuplicateFrameInformation = new OutputDuplicateFrameInformation();
+
+            try
+            {
+                _outputDuplication.AcquireNextFrame(-1, out outputDuplicateFrameInformation, out desktopResource);
+            }
+            catch (SharpDXException ex)
+            {
+                if (ex.ResultCode.Code == SharpDX.DXGI.ResultCode.WaitTimeout.Result.Code)
+                {
+                    return true;
+                }
+                if (ex.ResultCode.Failure)
+                {
+                    throw new Exception("Failed to acquire next frame.");
+                }
+            }
+
+            using (var tempTexture = desktopResource.QueryInterface<Texture2D>())
+            {
+                _direct3D11Device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
+            }
+
+            desktopResource.Dispose();
+            return false;
+        }
+
+        /// <summary>
+        /// Release the last frame.
+        /// </summary>
+        /// <returns>False if it can't release the frame.</returns>
+        private bool ReleaseFrame()
+        {
+            try
+            {
+                _outputDuplication.ReleaseFrame();
+                return true;
+            }
+            catch (SharpDXException ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Generates a value corresponding to a <see cref="Led"/> by analyzing the screen
         /// </summary>
         /// <param name="ledIndex">index of the <see cref="Led"/></param>
-        /// <param name="data">The entire byte array corresponding to each pixel of the screen</param>
+        /// <param name="desktopScreenshot">The entire address in memory of an array of byte that represents the color of each pixels of the screen (1 pixel = 4 bytes)</param>
         /// <param name="positions">The position on the screen to analyze</param>
         /// <returns>a <see cref="Led"/></returns>
-        private Led GenerateLed(byte actionTarget, DataStream data, List<long> positions)
+        private Led GenerateLed(byte actionTarget, DataBox desktopScreenshot, List<long> positions)
         {
-            Requires.NotNull(data, nameof(data));
+            Requires.NotNull(desktopScreenshot, nameof(desktopScreenshot));
+            Requires.NotNull(positions, nameof(positions));
 
             var result = new Led();
             result.ActionTarget = actionTarget;
 
             if (positions.Count == 0)
             {
-                result.Color = new Color(0, 0, 0);
+                result.Color = new Models.Color(0, 0, 0);
                 return result;
             }
 
-            var buffer = new byte[4];
+            var buffer = new byte[Consts.BytePerPixel];
             var red = 0;
             var green = 0;
             var blue = 0;
@@ -238,11 +307,10 @@ namespace LightZ.ComponentModel.Services
             // colors average
             foreach (var position in positions)
             {
-                data.Position = position;
-                data.Read(buffer, 0, 4);
-                red += buffer[2];
-                green += buffer[1];
-                blue += buffer[0];
+                var pixel = Utilities.Read<ColorBGRA>(new IntPtr(desktopScreenshot.DataPointer.ToInt64() + position));
+                red += pixel.R;
+                green += pixel.G;
+                blue += pixel.B;
                 total++;
             }
 
@@ -255,7 +323,7 @@ namespace LightZ.ComponentModel.Services
             green = (byte)(Math.Pow(green / 255.0, 2) * 127.0 + 0.5);
             blue = (byte)(Math.Pow(blue / 255.0, 2) * 127.0 + 0.5);
 
-            result.Color = new Color((byte)red, (byte)green, (byte)blue);
+            result.Color = new Models.Color((byte)red, (byte)green, (byte)blue);
             return result;
         }
 
@@ -449,28 +517,63 @@ namespace LightZ.ComponentModel.Services
         }
 
         /// <summary>
-        /// Initialize the DirectX instance via SlimDX.
+        /// Initialize the DirectX instance via SharpDX and the Desktop Duplication API.
         /// </summary>
         private void InitializeDirectX()
         {
-            _direct3D9 = new Direct3D();
+            _adapter = null;
 
-            _adapter = _direct3D9.Adapters.DefaultAdapter;
-            if (CurrentMonitor != null)
+            try
             {
-                _adapter = _direct3D9.Adapters.FirstOrDefault(adapter => adapter.Details.DeviceName == CurrentMonitor.DeviceId);
+                _adapter = new Factory1().GetAdapter1(0);
+            }
+            catch (SharpDXException)
+            {
+                throw new Exception("Could not find the specified graphics card adapter.");
             }
 
-            var parameters = new PresentParameters();
-            parameters.Windowed = true;
-            parameters.SwapEffect = SwapEffect.Discard;
-            parameters.BackBufferCount = 1;
-            parameters.DeviceWindowHandle = IntPtr.Zero;
-            parameters.BackBufferFormat = _adapter.CurrentDisplayMode.Format;
-            parameters.BackBufferWidth = _adapter.CurrentDisplayMode.Width;
-            parameters.BackBufferHeight = _adapter.CurrentDisplayMode.Height;
+            _direct3D11Device = new SharpDX.Direct3D11.Device(_adapter);
 
-            _direct3D9Device = new Device(_direct3D9, _adapter.Adapter, DeviceType.Hardware, IntPtr.Zero, CreateFlags.HardwareVertexProcessing, parameters);
+            Output output = null;
+            try
+            {
+                output = _adapter.GetOutput(CurrentMonitor.Index);
+            }
+            catch (SharpDXException)
+            {
+                throw new Exception("Could not find the specified output device.");
+            }
+
+            var output1 = output.QueryInterface<Output1>();
+            _outputDescription = output.Description;
+            _textureDescription = new Texture2DDescription()
+            {
+                CpuAccessFlags = CpuAccessFlags.Read,
+                BindFlags = BindFlags.None,
+                Format = Format.B8G8R8A8_UNorm,
+                Width = _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left,
+                Height = _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top,
+                OptionFlags = ResourceOptionFlags.None,
+                MipLevels = 1,
+                ArraySize = 1,
+                SampleDescription = { Count = 1, Quality = 0 },
+                Usage = ResourceUsage.Staging
+            };
+
+            try
+            {
+                _outputDuplication = output1.DuplicateOutput(_direct3D11Device);
+            }
+            catch (SharpDXException ex)
+            {
+                if (ex.ResultCode.Code == SharpDX.DXGI.ResultCode.NotCurrentlyAvailable.Result.Code)
+                {
+                    throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.");
+                }
+            }
+
+            output1.Dispose();
+            output.Dispose();
         }
 
         #endregion

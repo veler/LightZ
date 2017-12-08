@@ -77,9 +77,12 @@ namespace LightZ.ComponentModel.Core
                     top = screen.Bounds.Top / primaryScreenScaleFactor * screenScale / 100;
                 }
 
-                var width = screen.Bounds.Width / primaryScreenScaleFactor * screenScale / 100;
+                // Since I changed the API to target DirectX 11 instead of 9, there is no scale problem anymore. But let's just comment this part in case.
+                //var width = screen.Bounds.Width / primaryScreenScaleFactor * screenScale / 100;
+                //var height = screen.Bounds.Height / primaryScreenScaleFactor * screenScale / 100;
 
-                var height = screen.Bounds.Height / primaryScreenScaleFactor * screenScale / 100;
+                var width = screen.Bounds.Width;
+                var height = screen.Bounds.Height;
 
                 result.Add(new ScreenInfo
                 {
