@@ -19,7 +19,7 @@ Special thank to [S�bastien WARIN](http://sebastien.warin.fr/) who inspired me
 # Setup a development environment
 
 You will need the following tools :
-* Windows 7, 8, 8.1 or 10
+* Windows 10
 * .Net 4.6
 * DirectX 11
 * Visual Studio 2017 with ``Windows development`` and ``C++ development``
